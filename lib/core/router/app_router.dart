@@ -1,12 +1,13 @@
 import 'package:go_router/go_router.dart';
-import '../../features/home/presentation/home_screen.dart';
+
+import '../router/app_shell.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const AppShell(),
     ),
   ],
 );

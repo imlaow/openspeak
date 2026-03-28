@@ -1,0 +1,50 @@
+﻿Analyzing openspeak...                                          
+
+  error - Classes can only extend other classes - lib\features\chat\domain\chat_notifier.dart:52:28 - extends_non_class
+warning - The method doesn't override an inherited method - lib\features\chat\domain\chat_notifier.dart:58:13 - override_on_non_overriding_member
+  error - Undefined name 'ref' - lib\features\chat\domain\chat_notifier.dart:60:5 - undefined_identifier
+  error - Undefined name 'ref' - lib\features\chat\domain\chat_notifier.dart:67:18 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:115:32 - undefined_identifier
+  error - Undefined name 'ref' - lib\features\chat\domain\chat_notifier.dart:117:18 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:118:26 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:129:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:129:13 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:147:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:152:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:152:17 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:159:31 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:174:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:174:15 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:175:23 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:183:7 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:183:15 - undefined_identifier
+  error - Undefined name 'ref' - lib\features\chat\domain\chat_notifier.dart:192:18 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:194:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:194:13 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:201:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:201:17 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:208:9 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:208:17 - undefined_identifier
+  error - Undefined name 'ref' - lib\features\chat\domain\chat_notifier.dart:221:18 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:224:5 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:224:13 - undefined_identifier
+  error - Undefined name 'state' - lib\features\chat\domain\chat_notifier.dart:229:18 - undefined_identifier
+  error - 'ChatNotifier' doesn't conform to the bound 'Notifier<ChatState>' of the type parameter 'NotifierT' - lib\features\chat\domain\chat_notifier.dart:238:29 - type_argument_not_matching_bounds
+  error - The argument type 'ChatNotifier Function()' can't be assigned to the parameter type 'ChatNotifier Function(Scenario)'.  - lib\features\chat\domain\chat_notifier.dart:239:3 - argument_type_not_assignable
+   info - The local variable '_i' starts with an underscore - lib\features\home\presentation\home_screen.dart:84:39 - no_leading_underscores_for_local_identifiers
+
+flutter : 32 issues found. 
+(ran in 16.7s)
+At line:1 char:1
++ flutter analyze 2>&1 | 
+Out-File -FilePath d:\opens
+peak\analyze_output ...
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (32   
+  issues found. (ran in    
+ 16.7s):String) [], Rem    
+oteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
