@@ -81,7 +81,7 @@ class HomeScreen extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 itemCount: scenarios.length > 6 ? 6 : scenarios.length,
-                separatorBuilder: (_, _i) => const SizedBox(width: 12),
+                separatorBuilder: (context, index) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final scenario = scenarios[index];
                   return _QuickStartCard(
