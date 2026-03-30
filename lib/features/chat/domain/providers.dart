@@ -1,29 +1,36 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import "package:flutter_riverpod/flutter_riverpod.dart";
 
-import '../../../core/models/scenario.dart';
-import '../../../core/services/chat_ai_service.dart';
-import '../../../core/services/grammar_check_service.dart';
-import '../../../core/services/stt_service.dart';
-import '../../../core/services/tts_service.dart';
-import '../data/chat_repository.dart';
-import '../../scenarios/data/scenario_data.dart';
+import "../../../core/config/env_config.dart";
+import "../../../core/models/scenario.dart";
+import "../../../core/services/azure_chat_ai_service.dart";
+import "../../../core/services/azure_tts_service.dart";
+import "../../../core/services/chat_ai_service.dart";
+import "../../../core/services/cloudflare_grammar_service.dart";
+import "../../../core/services/grammar_check_service.dart";
+import "../../../core/services/stt_service.dart";
+import "../../../core/services/tts_service.dart";
+import "../data/chat_repository.dart";
+import "../../scenarios/data/scenario_data.dart";
 
-// --- Service Providers ---
+// --- Service Providers (auto-switch Mock <-> Real) ---
 
 final chatAIServiceProvider = Provider<ChatAIService>((ref) {
-  return MockChatAIService();
+  if (EnvConfig.useMockServices) return MockChatAIService();
+  return AzureChatAIService();
 });
 
 final grammarCheckServiceProvider = Provider<GrammarCheckService>((ref) {
-  return MockGrammarCheckService();
+  if (EnvConfig.useMockServices) return MockGrammarCheckService();
+  return CloudflareGrammarService();
 });
 
 final ttsServiceProvider = Provider<TTSService>((ref) {
-  return MockTTSService();
+  if (EnvConfig.useMockServices) return MockTTSService();
+  return AzureTTSService();
 });
 
 final sttServiceProvider = Provider<STTService>((ref) {
-  return MockSTTService();
+  return MockSTTService(); // Real STT coming next
 });
 
 // --- Repository Provider ---
