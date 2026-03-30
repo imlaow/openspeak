@@ -3,9 +3,7 @@
 on:
   push:
     branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
-  workflow_dispatch: # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   build:
@@ -29,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Create .env file
+      - name: Create .env file from Secrets
         run: |
           echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> .env
           echo "AZURE_OPENAI_DEPLOYMENT_ID=${{ secrets.AZURE_OPENAI_DEPLOYMENT_ID }}" >> .env
@@ -44,7 +42,18 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Upload APK
+      - name: Upload and QR Code
+        run: |
+          URL=$(curl --upload-file build/app/outputs/flutter-apk/app-release.apk https://transfer.sh/openspeak-debug.apk)
+          echo "---------------------------------------------------------------"
+          echo "   APK IS READY FOR DOWNLOAD"
+          echo "   Link: $URL"
+          echo "   Scan the QR code below on your phone:"
+          echo "---------------------------------------------------------------"
+          curl -s "https://qrenco.de/$URL"
+          echo "---------------------------------------------------------------"
+
+      - name: Keep Artifact (Backup)
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
