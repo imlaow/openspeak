@@ -42,18 +42,15 @@ jobs:
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons
 
-      - name: Upload and QR Code
-        run: |
-          # 使用 file.io 上传并用 jq 解析出 link
-          RESPONSE=$(curl -F "file=@build/app/outputs/flutter-apk/app-release.apk" https://file.io)
-          URL=$(echo $RESPONSE | jq -r .link)
-          echo "---------------------------------------------------------------"
-          echo "   APK IS READY FOR DOWNLOAD"
-          echo "   Link: $URL"
-          echo "   Scan the QR code below on your phone:"
-          echo "---------------------------------------------------------------"
-          curl -s "https://qrenco.de/$URL"
-          echo "---------------------------------------------------------------"
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
+          files: build/app/outputs/flutter-apk/app-release.apk
+          body: "Auto-generated release from GitHub Actions."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Keep Artifact (Backup)
         uses: actions/upload-artifact@v4
