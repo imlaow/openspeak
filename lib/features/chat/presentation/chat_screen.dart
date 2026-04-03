@@ -12,8 +12,15 @@ import 'widgets/voice_input_bar.dart';
 /// Main chat conversation screen.
 class ChatScreen extends ConsumerStatefulWidget {
   final Scenario scenario;
+  final bool showBackButton;
+  final List<Widget> appBarActions;
 
-  const ChatScreen({super.key, required this.scenario});
+  const ChatScreen({
+    super.key,
+    required this.scenario,
+    this.showBackButton = true,
+    this.appBarActions = const [],
+  });
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -64,6 +71,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
         backgroundColor: colorScheme.surface,
+        automaticallyImplyLeading: widget.showBackButton,
         title: Column(
           children: [
             Text(
@@ -81,10 +89,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
           ],
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, color: colorScheme.onSurface),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: widget.showBackButton
+            ? IconButton(
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color: colorScheme.onSurface,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            : null,
+        actions: widget.appBarActions,
       ),
       body: ValueListenableBuilder<ChatState>(
         valueListenable: _chatNotifier,
