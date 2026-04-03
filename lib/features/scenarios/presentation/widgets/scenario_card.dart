@@ -7,11 +7,7 @@ class ScenarioCard extends StatelessWidget {
   final Scenario scenario;
   final VoidCallback onTap;
 
-  const ScenarioCard({
-    super.key,
-    required this.scenario,
-    required this.onTap,
-  });
+  const ScenarioCard({super.key, required this.scenario, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +38,7 @@ class ScenarioCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  IconData(
-                    int.parse(scenario.iconCodePoint),
-                    fontFamily: 'MaterialIcons',
-                  ),
+                  scenario.iconData,
                   size: 24,
                   color: colorScheme.onPrimaryContainer,
                 ),
@@ -78,8 +71,10 @@ class ScenarioCard extends StatelessWidget {
 
               // Difficulty badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: _difficultyColor(scenario.difficulty, colorScheme),
                   borderRadius: BorderRadius.circular(12),
@@ -88,7 +83,9 @@ class ScenarioCard extends StatelessWidget {
                   scenario.difficulty.label,
                   style: textTheme.labelSmall?.copyWith(
                     color: _difficultyTextColor(
-                        scenario.difficulty, colorScheme),
+                      scenario.difficulty,
+                      colorScheme,
+                    ),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -101,7 +98,9 @@ class ScenarioCard extends StatelessWidget {
   }
 
   Color _difficultyColor(
-      ScenarioDifficulty difficulty, ColorScheme colorScheme) {
+    ScenarioDifficulty difficulty,
+    ColorScheme colorScheme,
+  ) {
     switch (difficulty) {
       case ScenarioDifficulty.beginner:
         return colorScheme.tertiaryContainer;
@@ -113,7 +112,9 @@ class ScenarioCard extends StatelessWidget {
   }
 
   Color _difficultyTextColor(
-      ScenarioDifficulty difficulty, ColorScheme colorScheme) {
+    ScenarioDifficulty difficulty,
+    ColorScheme colorScheme,
+  ) {
     switch (difficulty) {
       case ScenarioDifficulty.beginner:
         return colorScheme.onTertiaryContainer;

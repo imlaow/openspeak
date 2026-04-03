@@ -56,7 +56,9 @@ class HomeScreen extends ConsumerWidget {
           // Daily Goal
           SliverToBoxAdapter(
             child: _DailyGoalCard(
-                colorScheme: colorScheme, textTheme: textTheme),
+              colorScheme: colorScheme,
+              textTheme: textTheme,
+            ),
           ),
 
           // Section: Quick Start
@@ -118,20 +120,16 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 24),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
     );
   }
 
   void _openChat(BuildContext context, Scenario scenario) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ChatScreen(scenario: scenario),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => ChatScreen(scenario: scenario)));
   }
 }
 
@@ -139,10 +137,7 @@ class _WelcomeCard extends StatelessWidget {
   final ColorScheme colorScheme;
   final TextTheme textTheme;
 
-  const _WelcomeCard({
-    required this.colorScheme,
-    required this.textTheme,
-  });
+  const _WelcomeCard({required this.colorScheme, required this.textTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -166,10 +161,7 @@ class _WelcomeCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(
-                  '👋',
-                  style: textTheme.headlineMedium,
-                ),
+                Text('👋', style: textTheme.headlineMedium),
                 const SizedBox(width: 12),
                 Text(
                   'Welcome back!',
@@ -198,10 +190,7 @@ class _DailyGoalCard extends StatelessWidget {
   final ColorScheme colorScheme;
   final TextTheme textTheme;
 
-  const _DailyGoalCard({
-    required this.colorScheme,
-    required this.textTheme,
-  });
+  const _DailyGoalCard({required this.colorScheme, required this.textTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -227,8 +216,7 @@ class _DailyGoalCard extends StatelessWidget {
                   CircularProgressIndicator(
                     value: 0.3,
                     strokeWidth: 6,
-                    backgroundColor:
-                        colorScheme.surfaceContainerHighest,
+                    backgroundColor: colorScheme.surfaceContainerHighest,
                     valueColor: AlwaysStoppedAnimation(colorScheme.primary),
                     strokeCap: StrokeCap.round,
                   ),
@@ -324,10 +312,7 @@ class _QuickStartCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
-                IconData(
-                  int.parse(scenario.iconCodePoint),
-                  fontFamily: 'MaterialIcons',
-                ),
+                scenario.iconData,
                 size: 22,
                 color: colorScheme.onPrimaryContainer,
               ),
@@ -380,10 +365,7 @@ class _CategorySection extends StatelessWidget {
   final ColorScheme colorScheme;
   final TextTheme textTheme;
 
-  const _CategorySection({
-    required this.colorScheme,
-    required this.textTheme,
-  });
+  const _CategorySection({required this.colorScheme, required this.textTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -413,10 +395,7 @@ class _CategorySection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      IconData(
-                        int.parse(category.iconCode),
-                        fontFamily: 'MaterialIcons',
-                      ),
+                      category.iconData,
                       size: 20,
                       color: colorScheme.onSecondaryContainer,
                     ),

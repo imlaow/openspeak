@@ -94,21 +94,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               // Scenario info header
               Container(
                 width: double.infinity,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color:
-                      colorScheme.secondaryContainer.withValues(alpha: 0.5),
+                  color: colorScheme.secondaryContainer.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
                   children: [
                     Icon(
-                      IconData(
-                        int.parse(widget.scenario.iconCodePoint),
-                        fontFamily: 'MaterialIcons',
-                      ),
+                      widget.scenario.iconData,
                       size: 20,
                       color: colorScheme.onSecondaryContainer,
                     ),
@@ -130,7 +125,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 child: ListView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  itemCount: chatState.messages.length +
+                  itemCount:
+                      chatState.messages.length +
                       (chatState.streamingAIText.isNotEmpty ? 1 : 0) +
                       (chatState.isAIResponding &&
                               chatState.streamingAIText.isEmpty
@@ -138,8 +134,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           : 0),
                   itemBuilder: (context, index) {
                     if (index < chatState.messages.length) {
-                      return ChatBubble(
-                          message: chatState.messages[index]);
+                      return ChatBubble(message: chatState.messages[index]);
                     }
                     if (chatState.isAIResponding &&
                         chatState.streamingAIText.isEmpty &&
@@ -147,8 +142,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       return const TypingIndicator();
                     }
                     if (chatState.streamingAIText.isNotEmpty) {
-                      return StreamingBubble(
-                          text: chatState.streamingAIText);
+                      return StreamingBubble(text: chatState.streamingAIText);
                     }
                     return const SizedBox.shrink();
                   },
