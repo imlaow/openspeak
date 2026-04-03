@@ -1,20 +1,20 @@
-﻿import "dart:async";
+import "dart:async";
 import "dart:io";
 
+import "package:dio/dio.dart";
 import "package:path_provider/path_provider.dart";
 import "package:record/record.dart";
-import "package:dio/dio.dart";
 
 import "../config/env_config.dart";
 import "stt_service.dart";
 
-/// Azure Speech Services STT implementation.
+/// Whisper cloud STT implementation.
 ///
 /// Strategy:
-///  1. Record microphone to a temp WAV file using [record] package.
-///  2. While recording, emit periodic partial STTResult to show the UI is active.
-///  3. On stopListening(), send the WAV to Azure Speech REST API and emit final result.
-class AzureSTTService implements STTService {
+///  1. Record microphone to a temp WAV file using [record].
+///  2. While recording, emit periodic partial STTResult as activity feedback.
+///  3. On stopListening(), upload WAV to an OpenAI-compatible Whisper endpoint.
+class WhisperSTTService implements STTService {
   final _recorder = AudioRecorder();
   late final Dio _dio;
 
@@ -22,18 +22,16 @@ class AzureSTTService implements STTService {
   StreamController<STTResult>? _controller;
   Timer? _partialTimer;
   String? _tempFilePath;
+  String _language = "en-US";
 
-  AzureSTTService() {
-    final key = EnvConfig.azureSpeechKey;
-    final region = EnvConfig.azureSpeechRegion;
+  WhisperSTTService() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: "https://$region.stt.speech.microsoft.com",
+        baseUrl: EnvConfig.whisperBaseUrl,
         connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 60),
         headers: {
-          "Ocp-Apim-Subscription-Key": key,
-          "Content-Type": "audio/wav; codecs=audio/pcm; samplerate=16000",
+          "Authorization": "Bearer ${EnvConfig.whisperApiKey}",
           "Accept": "application/json",
         },
       ),
@@ -47,11 +45,12 @@ class AzureSTTService implements STTService {
   Stream<STTResult> startListening({String language = "en-US"}) {
     _controller = StreamController<STTResult>.broadcast();
     _isListening = true;
-    _startRecording(language);
+    _language = language;
+    _startRecording();
     return _controller!.stream;
   }
 
-  Future<void> _startRecording(String language) async {
+  Future<void> _startRecording() async {
     try {
       final hasPermission = await _recorder.hasPermission();
       if (!hasPermission) {
@@ -59,10 +58,14 @@ class AzureSTTService implements STTService {
         return;
       }
 
-      // Save to a temp file
+      if (EnvConfig.whisperApiKey.isEmpty) {
+        _controller?.addError("WHISPER_API_KEY is not configured");
+        return;
+      }
+
       final dir = await getTemporaryDirectory();
       _tempFilePath =
-          "${dir.path}/openspeak_stt_${DateTime.now().millisecondsSinceEpoch}.wav";
+          "${dir.path}/openspeak_whisper_${DateTime.now().millisecondsSinceEpoch}.wav";
 
       await _recorder.start(
         const RecordConfig(
@@ -73,7 +76,6 @@ class AzureSTTService implements STTService {
         path: _tempFilePath!,
       );
 
-      // Emit "listening..." partial results so UI shows activity
       int dots = 0;
       _partialTimer = Timer.periodic(const Duration(milliseconds: 600), (_) {
         if (!_isListening) return;
@@ -100,13 +102,12 @@ class AzureSTTService implements STTService {
 
       final file = _tempFilePath != null ? File(_tempFilePath!) : null;
       if (file != null && await file.exists()) {
-        final text = await _transcribeFile(file);
+        final text = await _transcribeFile(file, _language);
         if (text != null && text.isNotEmpty) {
           _controller?.add(
             STTResult(text: text, isFinal: true, confidence: 0.95),
           );
         }
-        // Cleanup temp file
         await file.delete();
       }
     } catch (e) {
@@ -118,28 +119,24 @@ class AzureSTTService implements STTService {
     }
   }
 
-  Future<String?> _transcribeFile(File file) async {
+  Future<String?> _transcribeFile(File file, String language) async {
     try {
-      final bytes = await file.readAsBytes();
+      final locale = language.split("-").first.toLowerCase();
+      final form = FormData.fromMap({
+        "file": await MultipartFile.fromFile(file.path, filename: "audio.wav"),
+        "model": EnvConfig.whisperModel,
+        "language": locale,
+        "response_format": "json",
+      });
+
       final response = await _dio.post<Map<String, dynamic>>(
-        "/speech/recognition/conversation/cognitiveservices/v1",
-        queryParameters: {"language": "en-US", "format": "detailed"},
-        data: bytes,
-        options: Options(
-          headers: {
-            "Content-Type": "audio/wav; codecs=audio/pcm; samplerate=16000",
-          },
-          responseType: ResponseType.json,
-        ),
+        "/audio/transcriptions",
+        data: form,
+        options: Options(contentType: "multipart/form-data"),
       );
 
-      final status = response.data?["RecognitionStatus"];
-      if (status == "Success") {
-        return response.data?["DisplayText"] as String?;
-      }
-      return null;
+      return response.data?["text"] as String?;
     } on DioException catch (_) {
-      // Non-fatal: just return null so the user can try again
       return null;
     }
   }

@@ -86,7 +86,7 @@ class _HomeMd3TrialScreenState extends State<HomeMd3TrialScreen> {
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
             sliver: SliverList.separated(
               itemCount: 4,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 return _SessionCard(
                   title: 'Scenario ${index + 1}',

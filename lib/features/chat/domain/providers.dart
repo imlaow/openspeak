@@ -3,13 +3,13 @@
 import "../../../core/config/env_config.dart";
 import "../../../core/models/scenario.dart";
 import "../../../core/services/azure_chat_ai_service.dart";
-import "../../../core/services/azure_stt_service.dart";
 import "../../../core/services/azure_tts_service.dart";
 import "../../../core/services/chat_ai_service.dart";
 import "../../../core/services/cloudflare_grammar_service.dart";
 import "../../../core/services/grammar_check_service.dart";
 import "../../../core/services/stt_service.dart";
 import "../../../core/services/tts_service.dart";
+import "../../../core/services/whisper_stt_service.dart";
 import "../data/chat_repository.dart";
 import "../../scenarios/data/scenario_data.dart";
 
@@ -32,7 +32,7 @@ final ttsServiceProvider = Provider<TTSService>((ref) {
 
 final sttServiceProvider = Provider<STTService>((ref) {
   if (EnvConfig.useMockServices) return MockSTTService();
-  return AzureSTTService();
+  return WhisperSTTService();
 });
 
 // --- Repository Provider ---
