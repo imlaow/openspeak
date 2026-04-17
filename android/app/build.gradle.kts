@@ -44,15 +44,6 @@ android {
         }
     }
 
-    // 按 ABI 分包，每个架构独立 APK，体积减小约 50%
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("arm64-v8a", "armeabi-v7a", "x86_64")
-            isUniversalApk = false
-        }
-    }
 }
 
 flutter {
